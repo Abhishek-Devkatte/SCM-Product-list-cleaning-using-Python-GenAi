@@ -60,7 +60,7 @@ The goal of this project is to automate this process using Generative AI.
 
 ---
 
-# 🏗️ Solution Architecture
+# Solution Architecture
 
 ```text
                 Raw Product CSV
@@ -334,58 +334,6 @@ pip install -r requirements.txt
 ```
 
 Then run the Jupyter Notebook.
-
----
-
-# ▶️ How to Run
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/Abhishek-Devkatte/SCM-Product-list-cleaning-using-Python-GenAi.git
-```
-
-### 2. Open the project
-
-```bash
-cd SCM-Product-list-cleaning-using-Python-GenAi
-```
-
-### 3. Create and activate a virtual environment
-
-```bash
-python -m venv venv
-```
-
-Windows:
-
-```bash
-venv\Scripts\activate
-```
-
-### 4. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 5. Configure the API key
-
-Create `.env`:
-
-```env
-GROQ_API_KEY=your_api_key_here
-```
-
-### 6. Run the notebook
-
-Open:
-
-```text
-SCM Product List Cleaning using GenAI.ipynb
-```
-
-and execute the cells.
 
 ---
 
