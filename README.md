@@ -1,4 +1,4 @@
-🧠 Supply Chain Management (SCM) Product List Cleaning using GenAI (Python + OpenAI API)
+#🧠 Supply Chain Management (SCM) Product List Cleaning using GenAI (Python + OpenAI API)
 
 ### AI-Powered Product Master Data Cleaning & Standardization
 
