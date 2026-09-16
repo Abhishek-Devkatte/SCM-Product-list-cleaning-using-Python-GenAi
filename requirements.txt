@@ -1,0 +1,4 @@
+groq
+pandas
+tqdm
+python-dotenv
