@@ -4,6 +4,8 @@
 
 An AI-assisted Python ETL pipeline that cleans and standardizes messy Supply Chain Management (SCM) product master data using the **Groq API** and Generative AI.
 
+## 🚀 Run in Google Colab:
+https://colab.research.google.com/drive/13iMgEQcsM1jRIb1H8IGgwwkVMnWg0cJb?usp=sharing
 ---
 
 ## 📌 Project Overview
