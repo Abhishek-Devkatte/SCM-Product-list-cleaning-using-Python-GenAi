@@ -1,168 +1,461 @@
-# 🧠 Supply Chain Management (SCM) Product List Cleaning using GenAI (Python + Groq API)
+# 🧠 SCM Product List Cleaning using GenAI
+
+### AI-Powered Product Master Data Cleaning & Standardization
+
+An AI-assisted Python ETL pipeline that cleans and standardizes messy Supply Chain Management (SCM) product master data using the **Groq API** and Generative AI.
+
+---
 
 ## 📌 Project Overview
 
-This project focuses on automating the cleaning and structuring of raw Supply Chain product master data using Generative AI (Groq API) integrated within a Python ETL pipeline.
+Supply Chain product master data often contains inconsistent product names, spelling mistakes, mixed formats, embedded prices, weights, quantities, and product variants.
 
-The objective was to convert messy and inconsistent product names into structured fields:
+This project automates the cleaning and structuring of such product data using **Generative AI**.
+
+The system takes a raw CSV file containing product names and converts them into structured fields:
 
 - `main_product`
 - `product_type`
 - `SKU`
 
-The solution uses prompt engineering and structured JSON responses to generate consistent and usable product master data.
+The project combines **Python, Pandas, Generative AI, prompt engineering, JSON parsing, and ETL pipeline concepts** to automate the data-cleaning process.
 
 ---
 
 # 🚀 Problem Statement
 
-The SCM master product list contained:
+The raw SCM product master data contained several inconsistencies:
 
-- Inconsistent naming formats
-- Embedded SKU values (e.g., "50g", "Rs.10", "6PCS")
-- Mixed casing
-- Spelling errors (e.g., "Mashroom", "Agarwatti")
-- Random spacing
-- Brand + variant merged together
+- Inconsistent product naming formats
+- Embedded SKU information such as `50g`, `1kg`, `Rs.10`, and `6PCS`
+- Mixed uppercase and lowercase characters
+- Spelling mistakes such as `Mashroom` and `Agarwatti`
+- Random or inconsistent spacing
+- Brand names and product variants merged together
+- Different naming conventions for similar products
 
-Manual cleaning was:
+Manual cleaning of this data can be:
 
-- Time consuming
-- Error prone
-- Difficult to scale
-- Inconsistent across large datasets
+- Time-consuming
+- Error-prone
+- Difficult to maintain
+- Difficult to scale for large datasets
 
----
-
-# 🛠 Solution Architecture
-
-### 🔹 Technology Stack
-
-- Python
-- Groq API
-- Generative AI
-- Pandas
-- JSON parsing
-- Prompt Engineering
-- Chunk-based saving
-- Resume-safe processing logic
+The goal of this project is to automate this process using Generative AI.
 
 ---
 
-# 🧠 GenAI Prompt Engineering Logic
+# 🛠️ Technology Stack
 
-The system prompt was designed to:
+| Technology | Purpose |
+|---|---|
+| **Python** | Core programming and automation |
+| **Groq API** | Generative AI processing |
+| **Pandas** | CSV and data processing |
+| **JSON** | Structured AI responses |
+| **Prompt Engineering** | Product information extraction |
+| **Python-dotenv** | Secure API key management |
+| **tqdm** | Processing progress tracking |
+| **CSV** | Input and output data format |
 
-1. Identify SKU information first, such as numbers, price, weight, or quantity.
-2. Extract the main product or primary product identity.
-3. Extract the product type or descriptive variant.
-4. Correct common spelling errors.
-5. Normalize product names and values.
-6. Return the result in a structured JSON format.
+---
 
-### Example:
+# 🏗️ Solution Architecture
 
-**Input:**
+```text
+                Raw Product CSV
+                       │
+                       ▼
+              Read Product Data
+                       │
+                       ▼
+             Validate Product Names
+                       │
+                       ▼
+              Prompt Engineering
+                       │
+                       ▼
+                  Groq API
+                       │
+                       ▼
+              Generative AI Model
+                       │
+                       ▼
+             Structured JSON Output
+                       │
+                       ▼
+       ┌───────────────┼───────────────┐
+       │               │               │
+       ▼               ▼               ▼
+ main_product     product_type        SKU
+       │               │               │
+       └───────────────┼───────────────┘
+                       ▼
+              Save Processed Data
+                       │
+                       ▼
+                Cleaned CSV
+```
+
+---
+
+# 🧠 GenAI Prompt Engineering
+
+The AI prompt is designed to understand the structure of a product name and separate it into meaningful components.
+
+The processing logic focuses on:
+
+1. Identifying SKU information such as weight, quantity, price, or pack size.
+2. Extracting the main product or brand/product identity.
+3. Identifying the product type or variant.
+4. Correcting common spelling mistakes.
+5. Normalizing product information.
+6. Returning the result in a structured JSON format.
+
+---
+
+## 🔍 Example 1
+
+### Input
 
 ```text
 Oyester Mashroom
+```
 
-Output:
+### AI Output
 
+```json
 {
   "main_product": "Oyster Mushroom",
   "product_type": "",
   "SKU": ""
 }
+```
 
-Input:
+---
 
+## 🔍 Example 2
+
+### Input
+
+```text
 Parle-G Gold Biscuits -10 RS
+```
 
-Output:
+### AI Output
 
+```json
 {
   "main_product": "Parle-G",
   "product_type": "Gold Biscuits",
   "SKU": "10 RS"
 }
-🔄 ETL Pipeline Design
-1️⃣ Data Extraction
-Loaded the raw CSV product master file using Pandas.
-Identified the product name column.
-Handled missing or invalid rows before making API calls.
-2️⃣ Transformation — AI-Based Cleaning
-Sent individual product strings to the Groq API.
-Used prompt engineering to extract structured product information.
-Requested JSON-formatted responses from the AI model.
-Parsed the AI response and converted it into structured fields.
-Implemented retry logic for temporary API failures.
-3️⃣ Incremental Loading
-Implemented incremental/chunk-based saving.
-Saved processed records to an output CSV.
-Added resume capability so previously processed rows do not need to be processed again.
-Helped prevent data loss during long-running processing jobs.
-📊 Key Features
+```
 
-✔ AI-based structured product extraction
+---
 
-✔ Automatic spelling correction
+# 🔄 ETL Pipeline
 
-✔ SKU detection for weight, price, and quantity
+## 1️⃣ Data Extraction
 
-✔ Structured JSON output
+The pipeline loads the raw SCM product master CSV using Pandas.
 
-✔ Product name normalization
+### Processing includes:
 
-✔ Chunk-based/incremental saving
+- Loading the CSV file
+- Identifying the product name column
+- Reading product records
+- Checking for missing or invalid values
+- Preparing records for AI processing
 
-✔ Resume-safe execution
+---
 
-✔ API error handling and retry mechanism
+## 2️⃣ Transformation — AI-Based Cleaning
 
-✔ CSV-based batch processing
+Each product name is processed using the Groq API.
 
-📈 Business Impact
-Reduced manual product cleaning effort.
-Standardized product master naming.
-Improved consistency of product data.
-Made product data more suitable for downstream analytics.
-Enabled structured SKU-level information extraction.
-Helped prepare raw SCM product data for inventory, sales, and reporting workflows.
-🧪 Example Workflow
-Raw Product CSV
+The AI transformation process:
+
+```text
+Raw Product Name
        ↓
-Read Product Names
+AI Prompt
        ↓
-Validate Input
+Groq API
        ↓
-Send Product Name to Groq API
+Structured JSON
        ↓
-AI-Based Cleaning
-       ↓
-Structured JSON Response
-       ↓
-Extract Product / Type / SKU
-       ↓
-Save Cleaned Data
-       ↓
-Cleaned CSV
-🧩 Why This Project is Important
+Product / Type / SKU
+```
 
-This project demonstrates the practical use of Generative AI in a data engineering and Supply Chain Management workflow.
+The pipeline also includes:
 
-It demonstrates experience with:
+- Prompt-based data extraction
+- JSON response parsing
+- Spelling correction
+- Product normalization
+- API error handling
+- Retry logic
 
-Generative AI API integration
-Prompt engineering
-Structured data extraction
-JSON parsing
-Python automation
-ETL pipeline design
-Data cleaning and standardization
-CSV processing
-Error handling
-Resume-safe batch processing
-🏷 Tech Keywords
+---
 
-Python, Groq API, Generative AI, Prompt Engineering, JSON Parsing, ETL Pipeline, Data Cleaning, Supply Chain Analytics, Pandas, Automation, CSV Processing
+## 3️⃣ Incremental Loading
+
+The project uses incremental saving to reduce the risk of losing processed data during long-running API operations.
+
+The system:
+
+- Saves processed records periodically
+- Creates an output CSV
+- Checks whether an output file already exists
+- Detects previously processed rows
+- Continues processing from where it stopped
+
+This makes the pipeline **resume-safe**.
+
+---
+
+# 📊 Key Features
+
+### 🤖 AI-Based Cleaning
+Uses Generative AI to understand and standardize unstructured product names.
+
+### 🧹 Data Standardization
+Converts inconsistent product names into structured information.
+
+### ✏️ Spelling Correction
+Corrects common spelling mistakes found in raw product data.
+
+### 📦 SKU Detection
+Identifies information such as:
+
+- Weight
+- Quantity
+- Pack size
+- Price
+- Number of pieces
+
+### 📋 Structured JSON Output
+AI responses are converted into structured JSON fields.
+
+### 💾 Incremental Saving
+Processed records are saved periodically to reduce data-loss risk.
+
+### 🔄 Resume-Safe Processing
+Previously processed records are detected so processing can continue after an interruption.
+
+### ⚠️ Error Handling
+The pipeline includes retry handling for temporary API failures and resource limitations.
+
+### 📈 Progress Tracking
+`tqdm` is used to monitor the progress of product processing.
+
+---
+
+# 📈 Business Use Case
+
+Clean and standardized product master data can support downstream Supply Chain and analytics activities.
+
+Potential applications include:
+
+- Product master standardization
+- Inventory analytics
+- Sales reporting
+- SKU-level analysis
+- Product categorization
+- Supply Chain dashboards
+- Data quality improvement
+- Automated data preparation
+
+---
+
+# 🧪 Example Workflow
+
+```text
+1. Load raw product CSV
+          ↓
+2. Read product names
+          ↓
+3. Validate input data
+          ↓
+4. Send product names to Groq API
+          ↓
+5. Process using Generative AI
+          ↓
+6. Receive structured JSON
+          ↓
+7. Extract main_product, product_type and SKU
+          ↓
+8. Save cleaned records
+          ↓
+9. Generate cleaned CSV
+```
+
+---
+
+# 📂 Project Structure
+
+```text
+SCM-Product-List-Cleaning/
+│
+├── SCM Product List Cleaning using GenAI.ipynb
+├── Product List - Miri product master product list.csv
+├── requirements.txt
+├── README.md
+└── .gitignore
+```
+
+### Local-only files
+
+The following files are intentionally excluded from GitHub:
+
+```text
+.env
+venv/
+.ipynb_checkpoints/
+```
+
+The `.env` file is used to store the API key securely and should never be committed to the repository.
+
+---
+
+# 🔐 Environment Setup
+
+Create a `.env` file in the project directory:
+
+```env
+GROQ_API_KEY=your_api_key_here
+```
+
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Then run the Jupyter Notebook.
+
+---
+
+# ▶️ How to Run
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Abhishek-Devkatte/SCM-Product-list-cleaning-using-Python-GenAi.git
+```
+
+### 2. Open the project
+
+```bash
+cd SCM-Product-list-cleaning-using-Python-GenAi
+```
+
+### 3. Create and activate a virtual environment
+
+```bash
+python -m venv venv
+```
+
+Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+### 4. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Configure the API key
+
+Create `.env`:
+
+```env
+GROQ_API_KEY=your_api_key_here
+```
+
+### 6. Run the notebook
+
+Open:
+
+```text
+SCM Product List Cleaning using GenAI.ipynb
+```
+
+and execute the cells.
+
+---
+
+# 📤 Input & Output
+
+### Input
+
+A CSV file containing raw product names.
+
+Example:
+
+```text
+ProductName
+Oyester Mashroom
+Parle-G Gold Biscuits -10 RS
+Banana Chips 50g
+Amul Butter 100gm
+```
+
+### Output
+
+A cleaned CSV containing structured information:
+
+| ProductName | main_product | product_type | SKU |
+|---|---|---|---|
+| Oyester Mashroom | Oyster Mushroom | | |
+| Parle-G Gold Biscuits -10 RS | Parle-G | Gold Biscuits | 10 RS |
+| Banana Chips 50g | Banana Chips | | 50g |
+| Amul Butter 100gm | Amul | Butter | 100gm |
+
+---
+
+# 🧩 What This Project Demonstrates
+
+This project demonstrates practical experience with:
+
+- Generative AI API integration
+- Python automation
+- Prompt engineering
+- Structured data extraction
+- JSON parsing
+- Pandas
+- ETL pipeline design
+- Data cleaning
+- Data standardization
+- CSV processing
+- API error handling
+- Retry mechanisms
+- Incremental data processing
+- Resume-safe workflows
+
+---
+
+# 🎯 Project Outcome
+
+The project demonstrates how Generative AI can be integrated into a Python ETL workflow to automate the cleaning and standardization of messy Supply Chain product master data.
+
+Instead of manually cleaning product names one by one, the pipeline uses AI to transform unstructured product names into structured and analytics-ready information.
+
+---
+
+# 🏷️ Tech Keywords
+
+**Python · Groq API · Generative AI · Prompt Engineering · Pandas · JSON · ETL · Data Cleaning · Data Standardization · Supply Chain Analytics · CSV Processing · Automation · API Integration**
+
+---
+
+## 👨‍💻 Author
+
+**Abhishek Devkatte**
+
+GitHub:  
+https://github.com/Abhishek-Devkatte
